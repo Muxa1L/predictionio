@@ -8,9 +8,9 @@ ENV SPARK_VERSION 2.1.1
 
 ENV PIO_HOME /PredictionIO-${PIO_VERSION}-incubating
 ENV PATH=${PIO_HOME}/bin:$PATH
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
-RUN apk --no-cache add curl  
-RUN apk --no-cache add bash
+ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
+RUN apk --no-cache add curl bash coreutils
+RUN apk --no-cache add mariadb mariadb-client
 
 RUN curl -O http://apache-mirror.rbc.ru/pub/apache/incubator/predictionio/${PIO_VERSION}-incubating/apache-predictionio-${PIO_VERSION}-incubating.tar.gz \
     && mkdir ${PIO_HOME} \
@@ -21,10 +21,10 @@ RUN curl -O http://apache-mirror.rbc.ru/pub/apache/incubator/predictionio/${PIO_
 #RUN tar zxvf /apache-predictionio-${PIO_VERSION}-incubating/PredictionIO-${PIO_VERSION}-incubating.tar.gz -C /
 #RUN rm -r /apache-predictionio-${PIO_VERSION}-incubating
 RUN mkdir /${PIO_HOME}/vendors
-#COPY files/pio-env.sh ${PIO_HOME}/conf/pio-env.sh
+COPY files/pio-env.sh ${PIO_HOME}/conf/pio-env.sh
 
 RUN curl -O http://d3kbcqa49mib13.cloudfront.net/spark-${SPARK_VERSION}-bin-hadoop2.6.tgz \
-    && tar -xvzf spark-${SPARK_VERSION}-bin-hadoop2.6.tgz -C ${PIO_HOME}/vendors \
+    && tar -xzf spark-${SPARK_VERSION}-bin-hadoop2.6.tgz -C ${PIO_HOME}/vendors \
     && rm spark-${SPARK_VERSION}-bin-hadoop2.6.tgz
 
 #COPY files/hbase-site.xml ${PIO_HOME}/vendors/hbase-${HBASE_VERSION}/conf/hbase-site.xml
