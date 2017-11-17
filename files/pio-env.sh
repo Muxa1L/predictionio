@@ -1,7 +1,6 @@
 SPARK_HOME=$PIO_HOME/vendors/spark-2.1.1-bin-hadoop2.6
 
-#POSTGRES_JDBC_DRIVER=$PIO_HOME/lib/postgresql-42.0.0.jar
-MYSQL_JDBC_DRIVER=$PIO_HOME/lib/mysql-connector-java-5.1.41.jar
+MYSQL_JDBC_DRIVER=$PIO_HOME/lib/mariadb-java-client-2.2.0.jar
 
 # Filesystem paths where PredictionIO uses as block storage.
 PIO_FS_BASEDIR=$HOME/.pio_store
