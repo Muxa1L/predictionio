@@ -9,10 +9,19 @@ ENV SPARK_VERSION 2.1.1
 ENV PIO_HOME /PredictionIO-${PIO_VERSION}-incubating
 ENV PATH=${PIO_HOME}/bin:$PATH
 ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
-RUN apk --no-cache add curl bash coreutils
-RUN apk --no-cache add mariadb mariadb-client
+ENV MYSQL_DATABASE pio
+ENV MYSQL_USER pio
+ENV MYSQL_PASSWORD pio
 
-RUN curl -O http://apache-mirror.rbc.ru/pub/apache/incubator/predictionio/${PIO_VERSION}-incubating/apache-predictionio-${PIO_VERSION}-incubating.tar.gz \
+RUN apk --no-cache add bash coreutils
+RUN apk --no-cache add mariadb
+
+COPY files/mysql_conf.sh /mysql_conf.sh
+COPY files/my.cnf /etc/mysql/my.cnf
+
+RUN /mysql_conf.sh
+
+RUN wget http://apache-mirror.rbc.ru/pub/apache/incubator/predictionio/${PIO_VERSION}-incubating/apache-predictionio-${PIO_VERSION}-incubating.tar.gz \
     && mkdir ${PIO_HOME} \
     && tar -xzf apache-predictionio-${PIO_VERSION}-incubating.tar.gz -C ${PIO_HOME} \
     && rm apache-predictionio-${PIO_VERSION}-incubating.tar.gz \
@@ -23,9 +32,13 @@ RUN curl -O http://apache-mirror.rbc.ru/pub/apache/incubator/predictionio/${PIO_
 RUN mkdir /${PIO_HOME}/vendors
 COPY files/pio-env.sh ${PIO_HOME}/conf/pio-env.sh
 
-RUN curl -O http://d3kbcqa49mib13.cloudfront.net/spark-${SPARK_VERSION}-bin-hadoop2.6.tgz \
+RUN wget http://d3kbcqa49mib13.cloudfront.net/spark-${SPARK_VERSION}-bin-hadoop2.6.tgz \
     && tar -xzf spark-${SPARK_VERSION}-bin-hadoop2.6.tgz -C ${PIO_HOME}/vendors \
     && rm spark-${SPARK_VERSION}-bin-hadoop2.6.tgz
+
+RUN wget http://downloads.mariadb.com/Connectors/java/connector-java-2.2.0/mariadb-java-client-2.2.0.jar \ 
+    && mkdir ${PIO_HOME}/lib \
+    && mv mariadb-java-client-2.2.0.jar ${PIO_HOME}/lib
 
 #COPY files/hbase-site.xml ${PIO_HOME}/vendors/hbase-${HBASE_VERSION}/conf/hbase-site.xml
 #RUN sed -i "s|VAR_PIO_HOME|${PIO_HOME}|" ${PIO_HOME}/vendors/hbase-${HBASE_VERSION}/conf/hbase-site.xml \
