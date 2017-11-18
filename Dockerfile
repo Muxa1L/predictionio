@@ -19,7 +19,8 @@ RUN apk --no-cache add mariadb
 COPY files/mysql_conf.sh /mysql_conf.sh
 COPY files/my.cnf /etc/mysql/my.cnf
 
-RUN chmod +x /mysql_conf.sh && /mysql_conf.sh
+RUN chmod +x /mysql_conf.sh 
+RUN /mysql_conf.sh
 
 RUN wget http://apache-mirror.rbc.ru/pub/apache/incubator/predictionio/${PIO_VERSION}-incubating/apache-predictionio-${PIO_VERSION}-incubating.tar.gz \
     && mkdir ${PIO_HOME} \
