@@ -31,7 +31,6 @@ RUN wget http://apache-mirror.rbc.ru/pub/apache/incubator/predictionio/${PIO_VER
 #RUN tar zxvf /apache-predictionio-${PIO_VERSION}-incubating/PredictionIO-${PIO_VERSION}-incubating.tar.gz -C /
 #RUN rm -r /apache-predictionio-${PIO_VERSION}-incubating
 RUN mkdir /${PIO_HOME}/vendors
-COPY files/pio-env.sh ${PIO_HOME}/conf/pio-env.sh
 
 RUN wget http://d3kbcqa49mib13.cloudfront.net/spark-${SPARK_VERSION}-bin-hadoop2.6.tgz \
     && tar -xzf spark-${SPARK_VERSION}-bin-hadoop2.6.tgz -C ${PIO_HOME}/vendors \
@@ -40,6 +39,8 @@ RUN wget http://d3kbcqa49mib13.cloudfront.net/spark-${SPARK_VERSION}-bin-hadoop2
 RUN wget http://downloads.mariadb.com/Connectors/java/connector-java-2.2.0/mariadb-java-client-2.2.0.jar \ 
     && mkdir ${PIO_HOME}/lib \
     && mv mariadb-java-client-2.2.0.jar ${PIO_HOME}/lib
+
+COPY files/pio-env.sh ${PIO_HOME}/conf/pio-env.sh
 
 #COPY files/hbase-site.xml ${PIO_HOME}/vendors/hbase-${HBASE_VERSION}/conf/hbase-site.xml
 #RUN sed -i "s|VAR_PIO_HOME|${PIO_HOME}|" ${PIO_HOME}/vendors/hbase-${HBASE_VERSION}/conf/hbase-site.xml \
